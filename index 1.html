@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Iran Conflict Tracker | The Endicott Edge</title>
+<meta name="description" content="A sourced, dated timeline of the 2026 Iran war, from The Endicott Edge.">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root{--bg:#0a0f18;--panel:#121a27;--panel2:#18222f;--line:#253245;--text:#e9eef5;--muted:#9aa8ba;--gold:#d4a84b;--green:#3fbf8a;--amber:#e0a93b;--red:#e06a5a;--blue:#6aa6e0}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.55}
+a{color:var(--gold)}
+.wrap{width:min(1040px,calc(100% - 32px));margin:0 auto}
+.topbar{border-bottom:1px solid var(--line);background:#070b12}
+.topbar .wrap{display:flex;justify-content:space-between;align-items:center;padding:12px 0;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase}
+.brand{color:var(--gold);font-weight:800}
+.updated{color:var(--muted)}
+header{padding:44px 0 24px}
+h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(2.2rem,7vw,3.8rem);line-height:1.05;margin:0 0 12px}
+.lede{color:var(--muted);max-width:680px;font-size:1.05rem;margin:0}
+.notice{margin:22px 0 0;background:rgba(224,169,59,.08);border-left:3px solid var(--amber);padding:14px 16px;border-radius:6px;font-size:.93rem;color:#f1ddb0}
+h2{font-family:Georgia,serif;font-size:1.45rem;margin:40px 0 14px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px}
+.stat .k{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.stat .v{font-size:1.1rem;font-weight:700;margin:6px 0 4px}
+.stat .n{font-size:.88rem;color:var(--muted)}
+.controls{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.controls input{flex:1 1 220px;background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:10px 12px;font-size:1rem}
+.chip{background:var(--panel);border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:8px 13px;font-size:.85rem;cursor:pointer}
+.chip.on{background:var(--gold);color:#111;border-color:var(--gold);font-weight:700}
+.timeline{border-left:2px solid var(--line);margin-left:6px;padding-left:20px}
+.entry{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:12px}
+.entry:before{content:"";position:absolute;left:-28px;top:20px;width:12px;height:12px;border-radius:50%;background:var(--gold);border:2px solid var(--bg)}
+.meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:.8rem;margin-bottom:6px}
+.date{font-weight:700;color:var(--text)}
+.tag{padding:2px 8px;border-radius:4px;background:var(--panel2);color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-size:.7rem}
+.s-confirmed{background:rgba(63,191,138,.15);color:var(--green)}
+.s-reported{background:rgba(106,166,224,.15);color:var(--blue)}
+.s-claimed{background:rgba(224,106,90,.15);color:var(--red)}
+.entry h3{margin:0 0 4px;font-size:1.02rem}
+.entry p{margin:0;color:var(--muted);font-size:.93rem}
+.src{margin-top:8px;font-size:.82rem}
+.empty{color:var(--muted);padding:20px}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.legend div{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;font-size:.9rem;color:var(--muted)}
+#map{height:420px;border-radius:10px;border:1px solid var(--line);background:#0d1520}
+.leaflet-popup-content{font-size:.85rem;line-height:1.4}
+.mapnote{color:var(--muted);font-size:.82rem;margin-top:8px}
+.nums{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.num{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px}
+.num .big{font-size:1.7rem;font-weight:800;color:var(--gold);font-family:Georgia,serif}
+.num .k{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.num .n{font-size:.85rem;color:var(--muted);margin-top:4px}
+.vids{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.vid{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;text-decoration:none;color:var(--text)}
+.vid img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
+.vid div{padding:10px 12px;font-size:.9rem}
+.vid small{color:var(--muted);display:block}
+.cta{display:inline-block;margin-top:14px;background:var(--gold);color:#111;font-weight:700;padding:10px 16px;border-radius:8px;text-decoration:none}
+footer{border-top:1px solid var(--line);margin-top:48px;padding:24px 0 48px;color:var(--muted);font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="wrap"><span class="brand">The Endicott Edge</span><span class="updated" id="updated"></span></div></div>
+
+<main class="wrap">
+<header>
+  <h1>Iran Conflict Tracker</h1>
+  <p class="lede">A dated, sourced timeline of the 2026 war involving Iran, the United States and Israel, plus the fighting across the region, the fight over the Strait of Hormuz and the diplomacy to end it.</p>
+  <div class="notice"><strong>Verification standard:</strong> Every entry links to its source. Each one is labeled Confirmed (multiple credible outlets or official records), Reported (one credible outlet) or Claimed (a party to the conflict says so and it hasn't been independently verified). This is a public-information resource, not real-time operational intelligence.</div>
+</header>
+
+<h2>Where things stand</h2>
+<div class="stats" id="stats"></div>
+
+<h2>By the numbers</h2>
+<div class="nums" id="nums"></div>
+<p class="mapnote">Death tolls in wartime are disputed and incomplete. Each figure shows its source and date, and ranges are used where counts disagree.</p>
+
+<h2>Conflict map</h2>
+<div id="map"></div>
+<p class="mapnote">Markers show approximate locations of events on the timeline, at city or region level only. Tap a marker for details.</p>
+
+<h2>Timeline</h2>
+<div class="controls">
+  <input id="q" type="search" placeholder="Search entries (e.g. Hormuz, Lebanon, talks)">
+</div>
+<div class="controls" id="cats"></div>
+<div class="timeline" id="timeline"></div>
+
+<h2>Featured on The Endicott Edge</h2>
+<p class="lede" style="margin-bottom:14px">Constitutional and policy analysis of the war, separating the politics from the Constitution.</p>
+<div class="vids" id="vids"></div>
+<a class="cta" href="https://www.youtube.com/channel/UCyd6mL5bobTFEYuWQXPWPLw" target="_blank" rel="noopener">Watch The Endicott Edge on YouTube</a>
+
+<h2>How to read this tracker</h2>
+<div class="legend">
+  <div><span class="tag s-confirmed">Confirmed</span><br>Backed by several credible outlets or an official record.</div>
+  <div><span class="tag s-reported">Reported</span><br>Reported by one credible outlet and not yet independently corroborated.</div>
+  <div><span class="tag s-claimed">Claimed</span><br>A statement by a government or armed group that hasn't been independently verified.</div>
+</div>
+</main>
+
+<footer><div class="wrap">
+  Produced by <strong>The Endicott Edge</strong>: constitutional and policy analysis. Truth. Verified. Entries are corrected or removed as better evidence comes in. Spot an error? Let us know through the show's channels.
+</div></footer>
+
+<script>
+/* ================================================================
+   HOW TO UPDATE (edit on GitHub, then commit to main):
+   1. Change LAST_UPDATED.
+   2. Add a new entry at the TOP of the ENTRIES list, copying this format:
+      {date:"2026-09-25", cat:"Diplomacy", status:"reported",
+       title:"Short headline", text:"One or two sentence summary.",
+       src:"Outlet name", url:"https://..."},
+   status options: confirmed | reported | claimed
+   cat options: Military | Diplomacy | Hormuz & Shipping | Regional | Economy | Nuclear
+   ================================================================ */
+const LAST_UPDATED = "September 24, 2026";
+
+const STATUS = [
+  {k:"War status", v:"Hostilities resumed", n:"The June interim deal collapsed in July, and fighting picked up again in September."},
+  {k:"Diplomacy", v:"Indirect talks, no breakthrough", n:"Qatar is carrying messages between US and Iranian officials at the UN in New York."},
+  {k:"Strait of Hormuz", v:"Contested, with near-daily attacks", n:"The US blockade of Iranian ports is still in place, though traffic has picked up."},
+  {k:"Other fronts", v:"Lebanon, Yemen, Red Sea", n:"Israel–Hezbollah fighting continues, and the Houthis have pushed toward Bab el-Mandeb."}
+];
+
+const ENTRIES = [
+ {date:"2026-09-23",cat:"Hormuz & Shipping",status:"reported",title:"Cargo ship hit in Strait of Hormuz",text:"UKMTO said a cargo ship was hit by projectiles. Two crew members were casualties, and the ship was left on fire and adrift after the crew evacuated.",src:"Reuters",url:"https://www.reuters.com/world/middle-east/hope-progress-after-us-iran-hold-first-shuttle-talks-months-2026-09-23/"},
+ {date:"2026-09-23",cat:"Diplomacy",status:"confirmed",title:"Pezeshkian: Iran 'will not bow to pressure'",text:"At the UN General Assembly, Iran's president condemned the US blockade and repeated that Iran is not seeking nuclear weapons.",src:"Reuters",url:"https://www.reuters.com/world/middle-east/hope-progress-after-us-iran-hold-first-shuttle-talks-months-2026-09-23/"},
+ {date:"2026-09-23",cat:"Economy",status:"reported",title:"US threatens secondary sanctions over Iranian flights",text:"Washington said it would sanction any country that allows Iranian flights. Iranian official Mohsen Rezaei threatened retaliation against airports in neighboring countries.",src:"Reuters",url:"https://www.reuters.com/world/middle-east/hope-progress-after-us-iran-hold-first-shuttle-talks-months-2026-09-23/"},
+ {date:"2026-09-23",cat:"Diplomacy",status:"reported",title:"Iran reportedly offers regionwide ceasefire road map",text:"Sources told The National that Tehran proposed a ceasefire of up to 60 days, tied to reopening Hormuz and a timeline for negotiations.",src:"The National",url:"https://www.thenationalnews.com/news/mena/2026/09/23/iran-us-meeting-new-york/"},
+ {date:"2026-09-22",cat:"Diplomacy",status:"confirmed",title:"First known US–Iran talks since July collapse",text:"Foreign Minister Araghchi and US envoys Witkoff and Kushner exchanged messages through a Qatari mediator in New York. Iran's conditions include an end to the war on all fronts and the release of its frozen assets.",src:"Reuters",url:"https://www.reuters.com/world/middle-east/hope-progress-after-us-iran-hold-first-shuttle-talks-months-2026-09-23/"},
+ {date:"2026-09-22",cat:"Diplomacy",status:"confirmed",title:"Trump at UN: US could 'annihilate' the Islamic Republic",text:"The president told the General Assembly he had stopped Iran from getting a nuclear weapon and warned of further force if no deal is reached.",src:"Stars and Stripes",url:"https://www.stripes.com/theaters/us/2026-09-23/iran-discussions-united-nations-trump-threats-22941123.html"},
+ {date:"2026-09-09",cat:"Nuclear",status:"reported",title:"IAEA refers Iran to the UN Security Council",text:"Reported as US strikes intensified and Trump predicted the war would end after the election.",src:"Fox News",url:"https://www.foxnews.com/live-news/iran-war-strikes-strait-of-hormuz-09-09-26"},
+ {date:"2026-09-01",cat:"Regional",status:"reported",title:"Houthis gain access to Bab el-Mandeb",text:"Houthi fighters captured territory that gives them direct access to the Bab el-Mandeb Strait. Exact date approximate: September 2026.",src:"Britannica",url:"https://www.britannica.com/event/2026-Iran-war"},
+ {date:"2026-08-25",cat:"Hormuz & Shipping",status:"claimed",title:"US says Hormuz shipping lanes cleared of mines",text:"The US military said it had cleared Iranian mines from the international lanes and struck Larak Island. Exact date approximate: late August.",src:"Britannica",url:"https://www.britannica.com/event/2026-Iran-war"},
+ {date:"2026-07-18",cat:"Diplomacy",status:"confirmed",title:"Iran suspends interim-deal commitments",text:"Tehran announced it was suspending its obligations under the June memorandum of understanding.",src:"Britannica",url:"https://www.britannica.com/event/2026-Iran-war"},
+ {date:"2026-07-17",cat:"Military",status:"confirmed",title:"Two US service members killed in Jordan",text:"They were killed in strikes on a US base, an escalation of the renewed fighting.",src:"Britannica",url:"https://www.britannica.com/event/2026-Iran-war"},
+ {date:"2026-07-12",cat:"Military",status:"confirmed",title:"US strikes 140+ targets in Iran",text:"This followed an Iranian strike on a container ship. Tehran said the strait was closed, while Washington said it remained open.",src:"AP News",url:"https://apnews.com/article/iran-us-timeline-trump-hormuz-war-ceasefire-04da58cbae991183f8b52ef5bf615963"},
+ {date:"2026-07-08",cat:"Diplomacy",status:"confirmed",title:"Trump declares the ceasefire 'over'",text:"This came after Iran was accused of striking three ships in Hormuz. The US also reinstated sanctions on Iranian oil sales.",src:"AP News",url:"https://apnews.com/article/iran-us-timeline-trump-hormuz-war-ceasefire-04da58cbae991183f8b52ef5bf615963"},
+ {date:"2026-06-17",cat:"Nuclear",status:"confirmed",title:"US–Iran interim agreement signed",text:"Trump and Pezeshkian signed a memorandum. Iran agreed to dilute its highly enriched uranium stockpile in exchange for sanctions relief, with a 60-day window for a nuclear deal.",src:"AP News",url:"https://apnews.com/article/iran-us-timeline-trump-hormuz-war-ceasefire-04da58cbae991183f8b52ef5bf615963"},
+ {date:"2026-06-07",cat:"Military",status:"confirmed",title:"First Iran–Israel exchange since April ceasefire",text:"Iran fired ballistic missiles at Israel after Israeli strikes on southern Beirut, and Israel struck back.",src:"AP News",url:"https://apnews.com/article/iran-us-timeline-trump-hormuz-war-ceasefire-04da58cbae991183f8b52ef5bf615963"},
+ {date:"2026-05-05",cat:"Hormuz & Shipping",status:"confirmed",title:"Operation Epic Fury ends and Iran sets up a Hormuz toll authority",text:"The US ended its named operation. Iran created a Persian Gulf Strait Authority to set transit rules and collect tolls.",src:"Britannica",url:"https://www.britannica.com/event/2026-Iran-war"},
+ {date:"2026-04-13",cat:"Hormuz & Shipping",status:"confirmed",title:"US blockade of Iranian ports begins",text:"The US Navy began stopping ships that had docked at Iranian ports.",src:"AP News",url:"https://apnews.com/article/iran-us-timeline-trump-hormuz-war-ceasefire-04da58cbae991183f8b52ef5bf615963"},
+ {date:"2026-04-12",cat:"Diplomacy",status:"confirmed",title:"Islamabad talks end without a deal",text:"Vice President Vance and Iranian speaker Ghalibaf held direct talks in Pakistan.",src:"AP News",url:"https://apnews.com/article/iran-us-timeline-trump-hormuz-war-ceasefire-04da58cbae991183f8b52ef5bf615963"},
+ {date:"2026-04-07",cat:"Diplomacy",status:"confirmed",title:"Two-week ceasefire reached",text:"The ceasefire was brokered by Pakistan, and Israel was not part of the discussions.",src:"AP News",url:"https://apnews.com/article/iran-us-timeline-trump-hormuz-war-ceasefire-04da58cbae991183f8b52ef5bf615963"},
+ {date:"2026-03-28",cat:"Regional",status:"confirmed",title:"Houthis open a new front",text:"The Houthi movement launched missiles and drones toward Israel.",src:"Britannica",url:"https://www.britannica.com/event/2026-Iran-war"},
+ {date:"2026-03-08",cat:"Military",status:"confirmed",title:"Mojtaba Khamenei named supreme leader",text:"He hadn't appeared in public and was reportedly injured in the opening strikes.",src:"AP News",url:"https://apnews.com/article/iran-us-timeline-trump-hormuz-war-ceasefire-04da58cbae991183f8b52ef5bf615963"},
+ {date:"2026-03-02",cat:"Regional",status:"confirmed",title:"Hezbollah enters the war",text:"Hezbollah fired rockets at Israel. Israel struck back and invaded southern Lebanon.",src:"AP News",url:"https://apnews.com/article/iran-us-timeline-trump-hormuz-war-ceasefire-04da58cbae991183f8b52ef5bf615963"},
+ {date:"2026-02-28",cat:"Military",status:"confirmed",title:"US and Israel attack Iran; Khamenei killed",text:"Operation Epic Fury opened with large-scale strikes. Iran retaliated across Israel and the Gulf and asserted control over Hormuz.",src:"AP News",url:"https://apnews.com/article/iran-us-timeline-trump-hormuz-war-ceasefire-04da58cbae991183f8b52ef5bf615963"}
+];
+
+/* BY THE NUMBERS: update the value, note, source and date as new counts come out. */
+const NUMBERS = [
+ {k:"US service members killed",v:"18–22+",n:"18 in the Pentagon's public database; at least 22 per officials cited by the Washington Post (Sep 18).",src:"Reuters",url:"https://www.reuters.com/world/middle-east/us-troop-deaths-iran-war-exceed-pentagon-count-by-least-four-washington-post-2026-09-18/"},
+ {k:"Killed in Lebanon since Mar 2",v:"4,300+",n:"Lebanese Health Ministry count as of Sep 7.",src:"Reuters",url:"https://www.reuters.com/world/middle-east/israeli-strikes-southern-lebanese-town-kill-11-state-news-agency-says-2026-09-07/"},
+ {k:"Total killed, all parties (estimate)",v:"9,000–18,000",n:"Independent aggregator's range as of Sep 21. Iranian civilian counts are especially uncertain.",src:"MilitarySpend.org",url:"https://militaryspend.org/iran-war-casualties"},
+ {k:"Brent crude",v:"~$98/bbl",n:"Sep 23; up about 42% year over year. Brent passed $100 on Sep 9.",src:"Trading Economics",url:"https://tradingeconomics.com/commodity/brent-crude-oil"}
+];
+
+/* MAP MARKERS: [latitude, longitude, label, note] */
+const PLACES = [
+ [35.69,51.39,"Tehran","Opening US-Israeli strikes on Feb 28 killed Supreme Leader Ali Khamenei."],
+ [26.57,56.25,"Strait of Hormuz","The main flashpoint: blockade, mines, toll claims and near-daily attacks on ships."],
+ [26.20,56.36,"Larak Island","Struck by US forces in late August over reported mine-laying."],
+ [27.18,56.27,"Bandar Abbas","A missile strike on a girls' school nearby killed about 170 people."],
+ [29.23,50.32,"Kharg Island","Iran's main oil export terminal, which Trump threatened to target."],
+ [33.27,35.40,"Southern Lebanon","Israeli ground operations went past the Litani River in May."],
+ [33.89,35.50,"Beirut","Israeli strikes on southern Beirut set off Iran's June 7 missile barrage on Israel."],
+ [32.08,34.78,"Israel","Hit by Iranian, Hezbollah and Houthi missiles and drones."],
+ [31.95,35.93,"Jordan","Two US service members were killed in strikes on a US base on Jul 17."],
+ [12.58,43.33,"Bab el-Mandeb","Houthi forces took territory with direct access to the strait in September."],
+ [33.68,73.05,"Islamabad","Site of the Apr 11–12 US–Iran talks."],
+ [25.29,51.53,"Doha","Qatar is mediating the current indirect talks."]
+];
+
+/* FEATURED VIDEOS: add a new line at the top when you publish an episode. */
+const VIDEOS = [
+ {id:"kKLwkTyAMnQ",title:"Who Declares War?",date:"Sep 21, 2026"},
+ {id:"1Xx0-hVfu3Y",title:"September 24, 2026",date:"Sep 24, 2026"},
+ {id:"qU6pN9OaAVs",title:"September 23, 2026",date:"Sep 23, 2026"},
+ {id:"-3SwmrITUWY",title:"September 21, 2026",date:"Sep 21, 2026"}
+];
+
+/* ---------- no need to edit below this line ---------- */
+function initMap(){if(!window.L)return;const m=L.map("map",{scrollWheelZoom:false}).setView([27,48],4);L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{attribution:"&copy; OpenStreetMap &copy; CARTO",maxZoom:10}).addTo(m);PLACES.forEach(p=>L.circleMarker([p[0],p[1]],{radius:7,color:"#d4a84b",weight:2,fillColor:"#d4a84b",fillOpacity:.55}).addTo(m).bindPopup(`<strong>${esc(p[2])}</strong><br>${esc(p[3])}`));}
+const CATS=["All","Military","Diplomacy","Hormuz & Shipping","Regional","Economy","Nuclear"];
+let cat="All",q="";
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmt=d=>new Date(d+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
+document.getElementById("updated").textContent="Updated "+LAST_UPDATED;
+document.getElementById("stats").innerHTML=STATUS.map(s=>`<div class="stat"><div class="k">${esc(s.k)}</div><div class="v">${esc(s.v)}</div><div class="n">${esc(s.n)}</div></div>`).join("");
+function drawCats(){document.getElementById("cats").innerHTML=CATS.map(c=>`<button class="chip ${c===cat?"on":""}" data-c="${esc(c)}">${esc(c)}</button>`).join("")}
+function draw(){
+  const list=ENTRIES.slice().sort((a,b)=>b.date.localeCompare(a.date)).filter(e=>(cat==="All"||e.cat===cat)&&(!q||(e.title+" "+e.text+" "+e.cat).toLowerCase().includes(q)));
+  document.getElementById("timeline").innerHTML=list.length?list.map(e=>`<article class="entry"><div class="meta"><span class="date">${fmt(e.date)}</span><span class="tag">${esc(e.cat)}</span><span class="tag s-${e.status}">${esc(e.status)}</span></div><h3>${esc(e.title)}</h3><p>${esc(e.text)}</p><div class="src">Source: <a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.src)}</a></div></article>`).join(""):`<div class="empty">No entries match.</div>`;
+}
+document.getElementById("cats").addEventListener("click",e=>{if(e.target.dataset.c){cat=e.target.dataset.c;drawCats();draw()}});
+document.getElementById("q").addEventListener("input",e=>{q=e.target.value.toLowerCase().trim();draw()});
+drawCats();draw();
+document.getElementById("nums").innerHTML=NUMBERS.map(x=>`<div class="num"><div class="k">${esc(x.k)}</div><div class="big">${esc(x.v)}</div><div class="n">${esc(x.n)} <a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.src)}</a></div></div>`).join("");
+document.getElementById("vids").innerHTML=VIDEOS.map(v=>`<a class="vid" href="https://www.youtube.com/watch?v=${esc(v.id)}" target="_blank" rel="noopener"><img loading="lazy" src="https://i.ytimg.com/vi/${esc(v.id)}/hqdefault.jpg" alt=""><div>${esc(v.title)}<small>${esc(v.date)}</small></div></a>`).join("");
+</script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" onload="initMap()"></script>
+</body>
+</html>
